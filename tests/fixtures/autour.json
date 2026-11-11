@@ -1,0 +1,210 @@
+{
+ "lat": 48.8566,
+ "lon": 2.3522,
+ "rayon_km": 20,
+ "stations": [
+  {
+   "id": "75012001",
+   "distance_km": 1.2,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 75012001",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "75012001 rue de Lyon",
+   "ville": "Paris",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.789,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    },
+    "sp98": {
+     "prix": 1.899,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "75011002",
+   "distance_km": 2.4,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 75011002",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "75011002 rue de Lyon",
+   "ville": "Paris",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.759,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "orange"
+    },
+    "sp98": {
+     "prix": 1.929,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "orange"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "75010003",
+   "distance_km": 3.1,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 75010003",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "75010003 rue de Lyon",
+   "ville": "Paris",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.809,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "75020004",
+   "distance_km": 4.8,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 75020004",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "75020004 rue de Lyon",
+   "ville": "Paris",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.739,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "rouge"
+    },
+    "sp98": {
+     "prix": 1.879,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "rouge"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "75019005",
+   "distance_km": 5.5,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 75019005",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "75019005 rue de Lyon",
+   "ville": "Paris",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.829,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    },
+    "sp98": {
+     "prix": 1.959,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "93100006",
+   "distance_km": 7.9,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 93100006",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "93100006 rue de Lyon",
+   "ville": "Montreuil",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.719,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    },
+    "sp98": {
+     "prix": 1.869,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "94300007",
+   "distance_km": 9.2,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 94300007",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "94300007 rue de Lyon",
+   "ville": "Vincennes",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.849,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    },
+    "sp98": {
+     "prix": 1.989,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  },
+  {
+   "id": "92100008",
+   "distance_km": 11,
+   "lat": 48.85,
+   "lon": 2.35,
+   "enseigne": "Station 92100008",
+   "type_lieu": "fuel",
+   "icone": "Station",
+   "adresse": "92100008 rue de Lyon",
+   "ville": "Boulogne-Billancourt",
+   "services": [],
+   "maj": "2026-11-11T09:00:00Z",
+   "carburants": {
+    "gazole": {
+     "prix": 1.769,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    },
+    "sp98": {
+     "prix": 1.909,
+     "maj": "2026-11-11T08:00:00Z",
+     "fraicheur": "verte"
+    }
+   },
+   "ruptures": {}
+  }
+ ]
+}

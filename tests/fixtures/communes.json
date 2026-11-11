@@ -1,0 +1,26 @@
+{
+ "communes": [
+  {
+   "nom": "Lyon",
+   "slug": "lyon",
+   "code_postal": "69001",
+   "departement": "69",
+   "location": {
+    "lat": 45.76,
+    "lon": 4.83
+   },
+   "population": 522000
+  },
+  {
+   "nom": "Lyons-la-Forêt",
+   "slug": "lyons-la-foret",
+   "code_postal": "27480",
+   "departement": "27",
+   "location": {
+    "lat": 49.398,
+    "lon": 1.476
+   },
+   "population": 750
+  }
+ ]
+}
