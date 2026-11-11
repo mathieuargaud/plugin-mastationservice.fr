@@ -1,0 +1,202 @@
+/* Charte B du site : bandeau bleu, accent vert (Redmine #291, jetons de front/src/styles/jetons.css). */
+:root {
+  --mss-bleu: #005185;
+  --mss-bleu-clair: #0a6aa8;
+  --mss-vert: #bdd72d;
+  --mss-sur-vert: #1f2a00;
+  --mss-fond: #f1f5f9;
+  --mss-texte: #0f172a;
+  --mss-texte-doux: #475569;
+  --mss-carte: #ffffff;
+  --mss-bordure: #e2e8f0;
+  --mss-alerte: #a4262c;
+  --mss-rayon: 10px;
+  --mss-ombre: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --mss-police: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 360px;
+  margin: 0;
+  background: var(--mss-fond);
+  color: var(--mss-texte);
+  font: 14px/1.4 var(--mss-police);
+}
+
+:focus-visible {
+  outline: 3px solid var(--mss-vert);
+  outline-offset: 1px;
+}
+
+.cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.entete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(var(--mss-bleu), var(--mss-bleu-clair));
+  color: #fff;
+}
+
+.entete .nom {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+main {
+  padding: 12px;
+}
+
+.recherche {
+  display: flex;
+  gap: 8px;
+}
+
+input,
+select {
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--mss-bordure);
+  border-radius: 8px;
+  background: var(--mss-carte);
+  color: var(--mss-texte);
+  font: inherit;
+}
+
+#ville {
+  flex: 1;
+}
+
+.bouton {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--mss-bleu);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.choix {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.choix label {
+  color: var(--mss-texte-doux);
+}
+
+.choix select {
+  flex: 1;
+}
+
+/* Repli sur Paris : couleurs du bandeau « hors connexion » de l'application. */
+.bandeau {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff4ce;
+  color: #4a3b00;
+}
+
+.etat {
+  margin: 10px 0 0;
+}
+
+.etat:empty {
+  display: none;
+}
+
+.etat.erreur {
+  color: var(--mss-alerte);
+  font-weight: 700;
+}
+
+#reessayer {
+  margin-top: 8px;
+}
+
+.liste {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.liste li + li {
+  margin-top: 6px;
+}
+
+.station {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--mss-bordure);
+  border-radius: var(--mss-rayon);
+  background: var(--mss-carte);
+  box-shadow: var(--mss-ombre);
+  color: var(--mss-texte);
+  text-decoration: none;
+}
+
+.station:hover .enseigne {
+  color: var(--mss-bleu);
+  text-decoration: underline;
+}
+
+.enseigne {
+  overflow: hidden;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.prix {
+  justify-self: end;
+  font-weight: 700;
+  color: var(--mss-bleu);
+}
+
+.prix.moins-cher {
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--mss-vert);
+  color: var(--mss-sur-vert);
+}
+
+.details,
+.age {
+  color: var(--mss-texte-doux);
+  font-size: 12px;
+}
+
+.age {
+  justify-self: end;
+}
+
+.age.fraicheur-rouge {
+  color: var(--mss-alerte);
+}
+
+.pied {
+  padding: 0 12px 12px;
+  font-size: 12px;
+}
+
+.pied a {
+  color: var(--mss-bleu);
+}

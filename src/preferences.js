@@ -7,7 +7,7 @@ export const CARBURANT_DEFAUT = 'gazole';
 /** @returns {Promise<string>} code carburant mémorisé, `gazole` si absent ou inconnu */
 export async function lireCarburant() {
   const { carburant } = await chrome.storage.sync.get('carburant');
-  return CARBURANTS.includes(carburant) ? carburant : CARBURANT_DEFAUT;
+  return typeof carburant === 'string' && CARBURANTS.includes(carburant) ? carburant : CARBURANT_DEFAUT;
 }
 
 /** @param {string} code */
