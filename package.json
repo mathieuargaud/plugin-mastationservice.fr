@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "types": "tsc -p jsconfig.json"
+    "types": "tsc -p jsconfig.json",
+    "paquet": "node scripts/paquet.js"
   },
   "devDependencies": {
     "@types/chrome": "^0.3.7",
