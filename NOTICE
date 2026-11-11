@@ -1,0 +1,17 @@
+Extension Chrome MaStationService
+
+Le code source de ce dépôt est distribué sous licence MIT (voir LICENSE).
+
+La licence MIT ne s'applique pas aux éléments de marque suivants, qui restent
+la propriété de MaStationService (www.mastationservice.fr) :
+
+- le nom « MaStationService » ;
+- le logo popup/logo-mark.svg ;
+- les icônes du dossier icons/.
+
+Une version modifiée ou redistribuée de cette extension doit remplacer ces
+éléments par les siens et ne pas se présenter comme l'extension officielle
+de MaStationService.
+
+Les prix des carburants proviennent des données publiques des prix des
+carburants en France, servies par l'API de www.mastationservice.fr.

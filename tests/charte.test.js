@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 
-// Valeurs de front/src/styles/jetons.css du site (Redmine #291).
+// Valeurs de front/src/styles/jetons.css du site www.mastationservice.fr.
 const JETONS_SITE = {
   '--mss-bleu': '#005185',
   '--mss-bleu-clair': '#0a6aa8',
