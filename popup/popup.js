@@ -47,6 +47,8 @@ export async function initialiser(racine) {
   let relancer = () => {};
   let recherche = new AbortController();
   let saisie = new AbortController();
+  /** Contrôleur de la géolocalisation en cours ; égal à `recherche` tant qu'elle n'a pas répondu. */
+  let attentePosition = /** @type {AbortController | null} */ (null);
   /** @type {ReturnType<typeof setTimeout> | undefined} */
   let minuterie;
   /** Suggestions affichées et le texte qui les a produites. */
@@ -121,10 +123,14 @@ export async function initialiser(racine) {
     }
   }
 
+  /** Géolocalisation en cours ; abandonnée si l'utilisateur lance une autre recherche entre-temps. */
   async function depuisPosition() {
     recherche.abort();
+    const attente = (recherche = attentePosition = new AbortController());
     afficherEtat(MESSAGES.recherche);
-    await lancer(await obtenirPosition());
+    const point = await obtenirPosition();
+    if (recherche !== attente) return;
+    await lancer(point);
   }
 
   /** @param {string} texte @returns {Promise<Commune[]>} */
@@ -146,6 +152,12 @@ export async function initialiser(racine) {
   /** Ville validée : la suggestion correspondante, sinon la première, sinon Paris. @param {string} texte */
   async function valider(texte) {
     relancer = () => valider(texte);
+    // Suggestion déjà choisie (« Lyon (69) ») : l'API ne connaît pas ce libellé.
+    const proposee = proposees.communes.find((c) => libelle(c) === texte);
+    if (proposee) {
+      await lancer(proposee.location);
+      return;
+    }
     let communes;
     try {
       communes = proposees.texte === texte ? proposees.communes : await chargerCommunes(texte);
@@ -197,6 +209,8 @@ export async function initialiser(racine) {
 
   carburant.addEventListener('change', () => {
     ecrireCarburant(carburant.value);
+    // Géolocalisation en cours : sa recherche partira avec le nouveau carburant.
+    if (recherche === attentePosition) return;
     lancer(derniere.point, derniere.bandeau);
   });
 

@@ -40,10 +40,11 @@ describe('rechercher', () => {
   });
 
   it('hors de France', async () => {
-    stationsAutour.mockResolvedValueOnce([]).mockResolvedValueOnce(stations);
+    stationsAutour.mockResolvedValueOnce([]).mockResolvedValueOnce([]).mockResolvedValueOnce(stations);
     const r = await rechercher(GENEVE, 'gazole');
-    expect(stationsAutour).toHaveBeenCalledTimes(2);
-    expect(stationsAutour.mock.calls[1][0]).toEqual(PARIS);
+    expect(stationsAutour).toHaveBeenCalledTimes(3);
+    expect(stationsAutour.mock.calls[1].slice(0, 2)).toEqual([GENEVE, '']);
+    expect(stationsAutour.mock.calls[2][0]).toEqual(PARIS);
     expect(r.bandeau).toBe(BANDEAUX.horsFrance);
     expect(r.point).toEqual(PARIS);
     expect(r.stations).toHaveLength(6);
@@ -54,6 +55,14 @@ describe('rechercher', () => {
     const r = await rechercher(GENEVE, 'gazole');
     expect(r.stations).toEqual([]);
     expect(r.bandeau).toBe(BANDEAUX.horsFrance);
+  });
+
+  it('en France sans ce carburant : pas de repli', async () => {
+    stationsAutour.mockResolvedValueOnce([]).mockResolvedValueOnce(stations);
+    const r = await rechercher(LYON, 'gplc');
+    expect(stationsAutour).toHaveBeenCalledTimes(2);
+    expect(stationsAutour.mock.calls[1].slice(0, 2)).toEqual([LYON, '']);
+    expect(r).toEqual({ stations: [], bandeau: null, point: LYON });
   });
 
   it('Paris vide sans second appel', async () => {

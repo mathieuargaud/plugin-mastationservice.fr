@@ -61,7 +61,7 @@ describe('popup', () => {
   });
 
   it('bandeau hors France', async () => {
-    stationsAutour.mockResolvedValueOnce([]);
+    stationsAutour.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
     await initialiser(document);
     await vi.waitFor(() => expect($('#bandeau').textContent).toBe(BANDEAUX.horsFrance));
     expect(items()).toHaveLength(6);
@@ -96,6 +96,49 @@ describe('popup', () => {
     await vi.waitFor(() => expect($('#suggestions').children).toHaveLength(2));
     saisir($('#suggestions').children[1].value);
     await vi.waitFor(() => expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 49.398, lon: 1.476 }));
+  });
+
+  it('Entrée après une suggestion choisie', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    autocompleter.mockResolvedValue(communes);
+    await initialiser(document);
+    await vi.waitFor(() => expect(items()).toHaveLength(6));
+    saisir('Ly');
+    await vi.advanceTimersByTimeAsync(250);
+    await vi.waitFor(() => expect($('#suggestions').children).toHaveLength(2));
+    saisir($('#suggestions').children[0].value);
+    $('#recherche').requestSubmit();
+    await vi.waitFor(() => expect(items()).toHaveLength(6));
+    expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 45.76, lon: 4.83 });
+    expect(autocompleter).toHaveBeenCalledTimes(1);
+    expect($('#bandeau').hidden).toBe(true);
+  });
+
+  it('position tardive ignorée après une ville', async () => {
+    let resoudrePosition;
+    obtenirPosition.mockImplementation(() => new Promise((r) => (resoudrePosition = r)));
+    autocompleter.mockResolvedValue(communes);
+    await initialiser(document);
+    saisir('Lyon');
+    $('#recherche').requestSubmit();
+    await vi.waitFor(() => expect(items()).toHaveLength(6));
+    resoudrePosition({ lat: 43.6, lon: 1.44 });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(stationsAutour).toHaveBeenCalledTimes(1);
+    expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 45.76, lon: 4.83 });
+  });
+
+  it('carburant changé pendant la géolocalisation', async () => {
+    let resoudrePosition;
+    obtenirPosition.mockImplementation(() => new Promise((r) => (resoudrePosition = r)));
+    await initialiser(document);
+    $('#carburant').value = 'e10';
+    $('#carburant').dispatchEvent(new Event('change'));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(stationsAutour).not.toHaveBeenCalled();
+    resoudrePosition(LYON);
+    await vi.waitFor(() => expect(stationsAutour).toHaveBeenCalledTimes(1));
+    expect(stationsAutour.mock.calls[0].slice(0, 2)).toEqual([LYON, 'e10']);
   });
 
   it('aucune station', async () => {
