@@ -35,5 +35,5 @@ Aucun compte, aucune publicité, aucun traçage.
 ## Visuels à fournir
 
 - Icône 128 × 128 : `icons/icon-128.png`.
-- Captures d'écran 1280 × 800 ou 640 × 400 (1 à 5).
+- Captures d'écran 1280 × 800 : `store/captures/capture-*.png` (extension réelle, API de production).
 - Petite vignette promotionnelle 440 × 280 (facultative).
