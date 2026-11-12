@@ -17,12 +17,18 @@ const LYON = { lat: 45.76, lon: 4.83 };
 
 const $ = (sel) => document.querySelector(sel);
 const items = () => document.querySelectorAll('#liste li');
+const options = () => document.querySelectorAll('#suggestions [role="option"]');
 const annulee = () => Object.assign(new Error('annulée'), { name: 'AbortError' });
 
 /** Saisie dans le champ ville, comme au clavier. */
 function saisir(texte) {
   $('#ville').value = texte;
   $('#ville').dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/** Touche pressée dans le champ ville. */
+function touche(key) {
+  $('#ville').dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 }
 
 beforeEach(() => {
@@ -86,16 +92,60 @@ describe('popup', () => {
     expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 45.76, lon: 4.83 });
   });
 
-  it('suggestion choisie dans la liste', async () => {
+  it('liste des villes affichée après la saisie', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    autocompleter.mockResolvedValue(communes);
+    await initialiser(document);
+    saisir('Ly');
+    await vi.advanceTimersByTimeAsync(250);
+    await vi.waitFor(() => expect(options()).toHaveLength(2));
+    expect($('#suggestions').hidden).toBe(false);
+    expect($('#ville').getAttribute('aria-expanded')).toBe('true');
+    expect([...options()].map((o) => o.textContent)).toEqual(['Lyon (69)', 'Lyons-la-Forêt (27)']);
+  });
+
+  it('clic sur une ville de la liste', async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     autocompleter.mockResolvedValue(communes);
     obtenirPosition.mockResolvedValue(PARIS);
     await initialiser(document);
     saisir('Ly');
     await vi.advanceTimersByTimeAsync(250);
-    await vi.waitFor(() => expect($('#suggestions').children).toHaveLength(2));
-    saisir($('#suggestions').children[1].value);
+    await vi.waitFor(() => expect(options()).toHaveLength(2));
+    options()[1].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
     await vi.waitFor(() => expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 49.398, lon: 1.476 }));
+    expect($('#ville').value).toBe('Lyons-la-Forêt (27)');
+    expect($('#suggestions').hidden).toBe(true);
+    expect($('#ville').getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('choix au clavier dans la liste', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    autocompleter.mockResolvedValue(communes);
+    obtenirPosition.mockResolvedValue(PARIS);
+    await initialiser(document);
+    saisir('Ly');
+    await vi.advanceTimersByTimeAsync(250);
+    await vi.waitFor(() => expect(options()).toHaveLength(2));
+    touche('ArrowDown');
+    touche('ArrowDown');
+    expect($('#ville').getAttribute('aria-activedescendant')).toBe(options()[1].id);
+    expect(options()[1].getAttribute('aria-selected')).toBe('true');
+    touche('Enter');
+    await vi.waitFor(() => expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 49.398, lon: 1.476 }));
+    expect($('#ville').value).toBe('Lyons-la-Forêt (27)');
+    expect(autocompleter).toHaveBeenCalledTimes(1);
+  });
+
+  it('Échap ferme la liste', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    autocompleter.mockResolvedValue(communes);
+    await initialiser(document);
+    saisir('Ly');
+    await vi.advanceTimersByTimeAsync(250);
+    await vi.waitFor(() => expect(options()).toHaveLength(2));
+    touche('Escape');
+    expect($('#suggestions').hidden).toBe(true);
   });
 
   it('Entrée après une suggestion choisie', async () => {
@@ -105,8 +155,8 @@ describe('popup', () => {
     await vi.waitFor(() => expect(items()).toHaveLength(6));
     saisir('Ly');
     await vi.advanceTimersByTimeAsync(250);
-    await vi.waitFor(() => expect($('#suggestions').children).toHaveLength(2));
-    saisir($('#suggestions').children[0].value);
+    await vi.waitFor(() => expect(options()).toHaveLength(2));
+    options()[0].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
     $('#recherche').requestSubmit();
     await vi.waitFor(() => expect(items()).toHaveLength(6));
     expect(stationsAutour.mock.lastCall[0]).toEqual({ lat: 45.76, lon: 4.83 });

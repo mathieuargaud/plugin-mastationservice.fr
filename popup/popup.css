@@ -74,8 +74,42 @@ select {
   font: inherit;
 }
 
+.champ-ville {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
 #ville {
   flex: 1;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  max-height: 220px;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--mss-bordure);
+  border-radius: 8px;
+  background: var(--mss-carte);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 15%);
+}
+
+.suggestions li {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.suggestions li:hover,
+.suggestions li[aria-selected="true"] {
+  background: var(--mss-fond);
 }
 
 .bouton {

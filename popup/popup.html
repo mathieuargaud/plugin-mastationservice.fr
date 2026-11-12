@@ -13,8 +13,10 @@
   <main>
     <form id="recherche" class="recherche" role="search">
       <label for="ville" class="cache">Ville</label>
-      <input id="ville" type="search" list="suggestions" placeholder="Saisir une ville" autocomplete="off">
-      <datalist id="suggestions"></datalist>
+      <div class="champ-ville">
+        <input id="ville" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" placeholder="Saisir une ville" autocomplete="off">
+        <ul id="suggestions" class="suggestions" role="listbox" aria-label="Villes" hidden></ul>
+      </div>
       <button type="button" id="ma-position" class="bouton">Ma position</button>
     </form>
     <div class="choix">

@@ -33,7 +33,7 @@ export async function initialiser(racine) {
   const element = (/** @type {string} */ id) => /** @type {any} */ (racine.getElementById(id));
   /** @type {HTMLFormElement} */ const formulaire = element('recherche');
   /** @type {HTMLInputElement} */ const ville = element('ville');
-  /** @type {HTMLDataListElement} */ const suggestions = element('suggestions');
+  /** @type {HTMLUListElement} */ const suggestions = element('suggestions');
   /** @type {HTMLButtonElement} */ const maPosition = element('ma-position');
   /** @type {HTMLSelectElement} */ const carburant = element('carburant');
   /** @type {HTMLElement} */ const bandeau = element('bandeau');
@@ -53,6 +53,8 @@ export async function initialiser(racine) {
   let minuterie;
   /** Suggestions affichées et le texte qui les a produites. */
   let proposees = { texte: '', communes: /** @type {Commune[]} */ ([]) };
+  /** Rang de la suggestion surlignée au clavier, -1 si aucune. */
+  let active = -1;
 
   /** @param {string} texte @param {boolean} [erreur] */
   function afficherEtat(texte, erreur = false) {
@@ -139,19 +141,60 @@ export async function initialiser(racine) {
     const controleur = (saisie = new AbortController());
     const communes = await autocompleter(texte, controleur.signal);
     proposees = { texte, communes };
+    afficherSuggestions();
+    return communes;
+  }
+
+  /** @param {number} rang */
+  function surligner(rang) {
+    active = rang;
+    [...suggestions.children].forEach((li, i) => li.setAttribute('aria-selected', String(i === rang)));
+    const li = suggestions.children[rang];
+    if (li) {
+      ville.setAttribute('aria-activedescendant', li.id);
+      li.scrollIntoView?.({ block: 'nearest' });
+    } else ville.removeAttribute('aria-activedescendant');
+  }
+
+  /** @param {boolean} ouverte */
+  function basculerSuggestions(ouverte) {
+    suggestions.hidden = !ouverte;
+    ville.setAttribute('aria-expanded', String(ouverte));
+    surligner(-1);
+  }
+
+  /** Liste dessinée par la popup : le datalist de Chrome ne s'ouvre pas quand ses options arrivent après la frappe. */
+  function afficherSuggestions() {
     suggestions.replaceChildren(
-      ...communes.map((c) => {
-        const option = racine.createElement('option');
-        option.value = libelle(c);
-        return option;
+      ...proposees.communes.map((c, i) => {
+        const li = racine.createElement('li');
+        li.id = `suggestion-${i}`;
+        li.setAttribute('role', 'option');
+        li.textContent = libelle(c);
+        // mousedown plutôt que click : le champ garde le focus jusqu'au choix.
+        li.addEventListener('mousedown', (evenement) => {
+          evenement.preventDefault();
+          choisir(c);
+        });
+        return li;
       }),
     );
-    return communes;
+    basculerSuggestions(proposees.communes.length > 0);
+  }
+
+  /** Suggestion choisie à la souris ou au clavier : recherche immédiate. @param {Commune} commune */
+  function choisir(commune) {
+    clearTimeout(minuterie);
+    saisie.abort();
+    ville.value = libelle(commune);
+    basculerSuggestions(false);
+    lancer(commune.location);
   }
 
   /** Ville validée : la suggestion correspondante, sinon la première, sinon Paris. @param {string} texte */
   async function valider(texte) {
     relancer = () => valider(texte);
+    basculerSuggestions(false);
     // Suggestion déjà choisie (« Lyon (69) ») : l'API ne connaît pas ce libellé.
     const proposee = proposees.communes.find((c) => libelle(c) === texte);
     if (proposee) {
@@ -167,6 +210,7 @@ export async function initialiser(racine) {
       afficherEtat(MESSAGES.indisponible, true);
       return;
     }
+    basculerSuggestions(false);
     const minuscule = texte.toLowerCase();
     const choisie = communes.find((c) => libelle(c) === texte || c.nom.toLowerCase() === minuscule) ?? communes[0];
     if (choisie) await lancer(choisie.location);
@@ -176,16 +220,10 @@ export async function initialiser(racine) {
   ville.addEventListener('input', () => {
     clearTimeout(minuterie);
     const texte = ville.value.trim();
-    // Suggestion choisie dans la liste : recherche immédiate.
-    const choisie = proposees.communes.find((c) => libelle(c) === texte);
-    if (choisie) {
-      saisie.abort();
-      lancer(choisie.location);
-      return;
-    }
     if (texte.length < 2) {
       saisie.abort();
       suggestions.replaceChildren();
+      basculerSuggestions(false);
       return;
     }
     minuterie = setTimeout(() => {
@@ -194,6 +232,19 @@ export async function initialiser(racine) {
       });
     }, ANTI_REBOND_MS);
   });
+
+  ville.addEventListener('keydown', (evenement) => {
+    const nombre = suggestions.children.length;
+    if (suggestions.hidden || !nombre) return;
+    if (evenement.key === 'ArrowDown') surligner((active + 1) % nombre);
+    else if (evenement.key === 'ArrowUp') surligner(active <= 0 ? nombre - 1 : active - 1);
+    else if (evenement.key === 'Enter' && active >= 0) choisir(proposees.communes[active]);
+    else if (evenement.key === 'Escape') basculerSuggestions(false);
+    else return;
+    evenement.preventDefault();
+  });
+
+  ville.addEventListener('blur', () => basculerSuggestions(false));
 
   formulaire.addEventListener('submit', (evenement) => {
     evenement.preventDefault();
