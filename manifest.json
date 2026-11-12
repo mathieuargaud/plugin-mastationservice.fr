@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "MaStationService – prix des carburants",
   "description": "Les stations les moins chères autour de vous, en temps réel.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "permissions": ["geolocation", "storage"],
   "host_permissions": ["https://www.mastationservice.fr/*"],
   "action": {
